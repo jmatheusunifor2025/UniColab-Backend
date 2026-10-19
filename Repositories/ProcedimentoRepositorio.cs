@@ -1,5 +1,6 @@
 using System.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using MySqlConnector;
 using UniColab.Api.Data;
 
@@ -85,6 +86,7 @@ public sealed class ProcedimentoRepositorio : IProcedimentoRepositorio
         await using var comando = conexao.CreateCommand();
         comando.CommandText = procedimento;
         comando.CommandType = CommandType.StoredProcedure;
+        comando.Transaction = _db.Database.CurrentTransaction?.GetDbTransaction();
         foreach (var parametro in parametros)
         {
             comando.Parameters.Add(parametro);
